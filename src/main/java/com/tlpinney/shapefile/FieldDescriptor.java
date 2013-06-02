@@ -12,7 +12,15 @@ public class FieldDescriptor {
 	public byte[] DbasePlusLanReserved3 = new byte[2];
 	public byte SetFields;
 
+
 	
+	public String getName() {
+		return new String(this.FieldName);
+	}
+	
+	public int getLength() {
+		return this.FieldLength & 0xFF;
+	}
 	public String toString() { 
 		
 	StringBuilder s = new StringBuilder();

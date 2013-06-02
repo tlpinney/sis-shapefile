@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.Map;
 import com.esri.core.geometry.Point;
 
+import com.esri.core.geometry.OperatorImportFromESRIShape;
+
 
 /**
  * Hello world!
@@ -17,10 +19,41 @@ public class App
     public static void main( String[] args ) throws IOException
     {
     	
-    
-        
-		ShapeFile shp = new ShapeFile("/Users/user/Documents/workspace-shp/shapefile-api/data/ABRALicenseePt_4326.shp");
+    	ShapeFile shp;
+    	int count;
+    	
+    	shp = new ShapeFile("data/ANC90Ply_4326.shp");
 		print(shp);
+		
+		count = 0;
+		for (Integer i: shp.FeatureMap.keySet()) {
+			print(i);
+			print(shp.FeatureMap.get(i));
+			print("-----------------");
+			count++;
+			//System.exit(0);
+		}
+		
+		print(count);
+		print(shp.FeatureCount);
+		
+		System.exit(0);
+		
+		shp = new ShapeFile("data/ABRALicenseePt_4326.shp");
+		//print(shp);
+		
+		count = 0;
+		for (Integer i: shp.FeatureMap.keySet()) {
+			print(i);
+			print(shp.FeatureMap.get(i));
+			print("-----------------");
+			count++;
+			//System.exit(0);
+		}
+		
+		print(count);
+		print(shp.FeatureCount);
+		
 		
                
             

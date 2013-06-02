@@ -8,6 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.io.EndianUtils;
 import com.esri.core.geometry.Point;
+import com.esri.core.geometry.Polygon;
+import com.esri.core.geometry.ogc.OGCPolygon;
+import com.esri.core.geometry.OperatorImportFromESRIShape;
+
+
 import org.apache.commons.codec.binary.Hex;
 
 
@@ -155,17 +160,12 @@ public class ShapeFile {
 		df.read(DbasePlusLanReserved);
 		df.readInt();
 		
-		// 
-		long MaxMetaData = this.DbaseHeaderBytes + this.DbaseRecordBytes;
 		
-		//this.FDArray.add();
-		
-		//print("MaxMetaData: " + MaxMetaData);
 		
 		while(df.getFilePointer() <  this.DbaseHeaderBytes - 1) {
 			FieldDescriptor fd = new FieldDescriptor();
 			df.read(fd.FieldName);
-			print("FieldName: " + new String(fd.FieldName));
+			//print("FieldName: " + new String(fd.FieldName));
 			fd.FieldType = df.readByte();	
 			df.read(fd.FieldAddress);
 			fd.FieldLength = df.readByte();
@@ -180,8 +180,8 @@ public class ShapeFile {
 			
 			this.FDArray.add(fd);
 			// peek ahead and see if its the last record  
-			long fptr = df.getFilePointer();
-			print("filepointer: " + fptr);
+			//long fptr = df.getFilePointer();
+			//print("filepointer: " + fptr);
 			//byte [] terminator = new byte[1]; 
 			//df.read(terminator);
 			//print(Hex.encodeHexString(terminator));
@@ -190,18 +190,8 @@ public class ShapeFile {
 		// loop until you hit the 0Dh field terminator 
 		}
 		
-		for (FieldDescriptor tmp: this.FDArray) {
-			print(tmp);
-		}
 		
-		
-		
-		
-		
-		df.close();
-		
-		
-		
+		df.readByte(); // should be 0d for field terminator 
 		
 			
 		
@@ -211,7 +201,7 @@ public class ShapeFile {
 		//this.ContentLength = rf.readInt();
 		
 		
-		
+		//print(this);
 		
 		
 		
@@ -220,18 +210,129 @@ public class ShapeFile {
 			data = new byte[4];	
 			rf.read(data);
 			int ShapeType = getLittleInt(data);
+			Feature f = new Feature();
+			f.record = new HashMap<String, String>();
 			
-			data = new byte[8];
+			if (ShapeType == ShapeTypeEnum.Point.getValue()) {
+				data = new byte[8];
 			
-			rf.read(data);
-			double x = getLittleInt(data);
+				rf.read(data);
+				double x = getLittleDouble(data);
 			
-			rf.read(data);
-			double y = getLittleInt(data);
+				rf.read(data);
+				double y = getLittleDouble(data);
 						
-			Point pnt = new Point(x,y);
+				Point pnt = new Point(x,y);
+				f.geom = pnt;
+				
 			
-			this.FeatureMap.put(i, pnt);
+			} else if (ShapeType == ShapeTypeEnum.Polygon.getValue()) {
+				data = new byte[8];
+				rf.read(data);
+				double xmin = getLittleDouble(data);
+				rf.read(data);
+				double ymin = getLittleDouble(data);
+				rf.read(data);
+				double xmax = getLittleDouble(data);
+				rf.read(data);
+				double ymax = getLittleDouble(data);
+				
+				data = new byte[4];
+				rf.read(data);
+				int NumParts = getLittleInt(data);
+				rf.read(data);
+				int NumPoints = getLittleInt(data);
+				
+				if (NumParts > 1) {
+					// not implemented yet
+					print("Not implemented yet.");
+					System.exit(-1);
+				}
+				
+				// Depending on num parts and num points 
+				
+				//print("NumParts: " + NumParts);
+				//print("NumPoints: " + NumPoints);
+				
+				// read the one part 
+				rf.read(data);
+				int Part = getLittleInt(data);
+				//print(Part);
+				
+				
+				Polygon poly = new Polygon();
+				
+				// create a line from the points
+				data = new byte[8];
+				rf.read(data);
+				double xpnt = getLittleDouble(data);
+				rf.read(data);
+				double ypnt = getLittleDouble(data);
+				//Point oldpnt = new Point(xpnt, ypnt);
+				poly.startPath(xpnt, ypnt);
+				//double oldxpnt = xpnt;
+				//double oldypnt = ypnt;
+				//print(xpnt + " " + ypnt);
+				for (int j=0; j < NumPoints-1; j++) {
+					rf.read(data);
+					xpnt = getLittleDouble(data);
+					rf.read(data);
+					ypnt = getLittleDouble(data);
+					poly.lineTo(xpnt, ypnt);	
+					//print(xpnt + " " + ypnt);
+				}
+				//print(poly);
+				//print(poly.calculateArea2D());
+				//print(poly.getPathCount());
+				//print(poly.getPathSize(0));
+				
+				//System.exit(0);
+				f.geom = poly;
+				
+			}
+			
+				
+				
+				
+			
+			
+			// read in each Record and Populate the Feature
+		
+	
+			
+			df.readByte(); // denotes whether deleted or current
+			
+			// read first part of record 
+			
+			for (FieldDescriptor fd: this.FDArray) {
+				// read in the value
+				
+				
+				//print(fd.getName());
+				//print(fd.getLength());
+				data = new byte[fd.getLength()];
+				df.read(data);
+				//print(data[1]);
+				//System.exit(0);
+				
+				String value = new String(data);
+				//print(value);
+				//print(value.length());
+				
+				f.record.put(fd.getName(), value);
+				
+				
+			}
+			//print("Hello");
+			//System.exit(0);
+			this.FeatureMap.put(i, f);
+			
+			
+			
+			
+			//this.FeatureMap.put(i, pnt);
+			
+			
 			
 			//print(pnt);
 			
@@ -244,21 +345,11 @@ public class ShapeFile {
 			
 		}
 		
-		print(this.FeatureMap.size());
-		
-		
-		// read in all the data
-		// calculate how many records are needed to be read
+
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
+		df.close();
 		rf.close();
 		
 		
