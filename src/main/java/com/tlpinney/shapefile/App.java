@@ -142,6 +142,9 @@ public class App
 		
 		rf.close();
         
+		ShapeFile shp = new ShapeFile("/Users/user/Documents/workspace-shp/shapefile-api/data/ABRALicenseePt_4326.shp");
+		print(shp);
+		
         
                
             
