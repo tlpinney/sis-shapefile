@@ -5,10 +5,9 @@ import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.commons.io.EndianUtils;
-
 import com.esri.core.geometry.Point;
+import org.apache.commons.codec.binary.Hex;
 
 
 
@@ -30,21 +29,29 @@ public class ShapeFile {
 	//public int RecordNumber; // big 
 	//public int ContentLength; // big
 	
+	
+	// http://ulisse.elettra.trieste.it/services/doc/dbase/DBFstruct.htm
 	public byte DbaseVersion;
 	public byte[] DbaseLastUpdate = new byte[3];
 	public int FeatureCount;
-	public short HeaderBytes;
-	public short RecordBytes;
-	// reserve 2 bytes
-	public byte DbaseTransactionState;
-	public byte DbaseEncryption;
-	public byte[] MultiUserReserved = new byte[12];
-	public byte ProductionMDX;
-	public byte LangDriverID;
-	// reserved 2 bytes
-	public byte[] LangDriverName = new byte[32];
-	// reserved 4 bytes
-	public byte[] FieldDescriptorArray = new byte[48];
+	public short DbaseHeaderBytes;
+	public short DbaseRecordBytes;
+	// reserve 3 bytes
+	public byte[] DbasePlusLanReserved = new byte[13];
+	// reserve 4 bytes
+	public byte[] FieldName = new byte[11];
+	public byte FieldType;
+	public byte[] FieldAddress = new byte[4];
+	public byte FieldLength;
+	public byte FieldDecimalCount;
+	public byte[] DbasePlusLanReserved2 = new byte[2];
+	public byte WorkAreaID; 
+	public byte[] DbasePlusLanReserved3 = new byte[2];
+	public byte SetFields;
+	
+	
+	
+	
 	
 	public Map<Integer, Object> FeatureMap = new HashMap<Integer, Object>();
 	
@@ -60,7 +67,12 @@ public class ShapeFile {
 	private double getLittleDouble(byte [] data) {
 		return EndianUtils.readSwappedDouble(data, 0);
 	}
-			
+	
+	private short getLittleShort(byte [] data) {
+		return EndianUtils.readSwappedShort(data, 0);
+	}
+	
+	
 	public ShapeFile(String shpfile) throws IOException {
 		// load the shapefile in fill in corresponding metadata 
 		RandomAccessFile rf = new RandomAccessFile(shpfile,"r");
@@ -132,13 +144,55 @@ public class ShapeFile {
 		
 		
 		
-		
+		// http://ulisse.elettra.trieste.it/services/doc/dbase/DBFstruct.htm
+			
 		RandomAccessFile df = new RandomAccessFile(file_base,"r");
 		this.DbaseVersion = df.readByte();
 		df.read(this.DbaseLastUpdate);
 		data = new byte[4];
 		df.read(data);
 		this.FeatureCount = getLittleInt(data);
+		data = new byte[2];
+		df.read(data);
+		this.DbaseHeaderBytes = getLittleShort(data);
+		df.read(data);
+		this.DbaseRecordBytes = getLittleShort(data);
+		df.readShort(); // reserved 
+		df.readByte(); // reserved
+		df.read(DbasePlusLanReserved);
+		df.readInt();
+		
+		// get Field Descriptor Bytes
+		print("File pointer: " + df.getFilePointer());
+		df.read(this.FieldName);
+		print("length: " + this.FieldName.length);
+		print("File pointer: " + df.getFilePointer());
+		
+		
+		this.FieldType = df.readByte();
+		print("FT: " + this.FieldType);
+		
+		df.read(this.FieldAddress);
+		this.FieldLength = df.readByte();
+		this.FieldDecimalCount = df.readByte();
+		df.readShort(); // reserved
+		df.read(this.DbasePlusLanReserved2);
+		this.WorkAreaID = df.readByte();
+		df.read(this.DbasePlusLanReserved3);  
+		this.SetFields = df.readByte();
+		print(df.readByte()); // reserved
+		
+		// print out field terminator
+		print("Field terminator");
+		byte [] terminator = new byte[1]; 
+		df.read(terminator);
+		print(Hex.encodeHexString(terminator));
+		
+		
+		
+		
+		
+		
 		
 		
 		df.close();
@@ -227,9 +281,23 @@ public class ShapeFile {
 		s.append("mmax: " + this.mmax+ "\n");	
 		s.append("------------------------\n");
 		s.append("DbaseVersion: " + this.DbaseVersion+ "\n");
-		s.append("DbaseLastUpdate: " + this.DbaseLastUpdate +"\n");
+		s.append("DbaseLastUpdate: " + new String(this.DbaseLastUpdate) +"\n");
 		s.append("FeatureCount: " + this.FeatureCount +"\n");
+		s.append("DbaseHeaderBytes: " + this.DbaseHeaderBytes +"\n");
+		s.append("DbaseRecordBytes: " + this.DbaseRecordBytes +"\n");
+		s.append("DbasePlusLanReserved: " + this.DbasePlusLanReserved +"\n");
+		s.append("FieldName : " + new String(this.FieldName) + "\n");
+		s.append("FieldType : " + String.valueOf((char)this.FieldType) + "\n");
+		s.append("FieldAddress : " + this.FieldAddress + "\n");		
+		s.append("FieldLength : " + this.FieldLength + "\n");
+		s.append("FieldDecimalCount: " + this.FieldDecimalCount + "\n");
+		s.append("DbasePlusLanReserved2: " + this.DbasePlusLanReserved2 + "\n");
+		s.append("WorkAreaID: " + this.WorkAreaID + "\n");
+		s.append("DbasePlusLanReserved3: " + this.DbasePlusLanReserved3 + "\n");
+		s.append("SetFields: " + this.SetFields + "\n");
 		
+		
+			
 		
 		
 		return s.toString();
