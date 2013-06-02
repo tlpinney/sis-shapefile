@@ -2,6 +2,7 @@ package com.tlpinney.shapefile;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,20 +40,12 @@ public class ShapeFile {
 	// reserve 3 bytes
 	public byte[] DbasePlusLanReserved = new byte[13];
 	// reserve 4 bytes
-	public byte[] FieldName = new byte[11];
-	public byte FieldType;
-	public byte[] FieldAddress = new byte[4];
-	public byte FieldLength;
-	public byte FieldDecimalCount;
-	public byte[] DbasePlusLanReserved2 = new byte[2];
-	public byte WorkAreaID; 
-	public byte[] DbasePlusLanReserved3 = new byte[2];
-	public byte SetFields;
 	
 	
 	
 	
 	
+	public ArrayList<FieldDescriptor> FDArray = new ArrayList<FieldDescriptor>();
 	public Map<Integer, Object> FeatureMap = new HashMap<Integer, Object>();
 	
 	
@@ -162,34 +155,44 @@ public class ShapeFile {
 		df.read(DbasePlusLanReserved);
 		df.readInt();
 		
-		// get Field Descriptor Bytes
-		print("File pointer: " + df.getFilePointer());
-		df.read(this.FieldName);
-		print("length: " + this.FieldName.length);
-		print("File pointer: " + df.getFilePointer());
+		// 
+		long MaxMetaData = this.DbaseHeaderBytes + this.DbaseRecordBytes;
 		
+		//this.FDArray.add();
 		
-		this.FieldType = df.readByte();
-		print("FT: " + this.FieldType);
+		//print("MaxMetaData: " + MaxMetaData);
 		
-		df.read(this.FieldAddress);
-		this.FieldLength = df.readByte();
-		this.FieldDecimalCount = df.readByte();
-		df.readShort(); // reserved
-		df.read(this.DbasePlusLanReserved2);
-		this.WorkAreaID = df.readByte();
-		df.read(this.DbasePlusLanReserved3);  
-		this.SetFields = df.readByte();
-		print(df.readByte()); // reserved
+		while(df.getFilePointer() <  this.DbaseHeaderBytes - 1) {
+			FieldDescriptor fd = new FieldDescriptor();
+			df.read(fd.FieldName);
+			print("FieldName: " + new String(fd.FieldName));
+			fd.FieldType = df.readByte();	
+			df.read(fd.FieldAddress);
+			fd.FieldLength = df.readByte();
+			fd.FieldDecimalCount = df.readByte();
+			df.readShort(); // reserved
+			df.read(fd.DbasePlusLanReserved2);
+			fd.WorkAreaID = df.readByte();
+			df.read(fd.DbasePlusLanReserved3);  
+			fd.SetFields = df.readByte();
+			data = new byte[6];
+			df.read(data); // reserved
+			
+			this.FDArray.add(fd);
+			// peek ahead and see if its the last record  
+			long fptr = df.getFilePointer();
+			print("filepointer: " + fptr);
+			//byte [] terminator = new byte[1]; 
+			//df.read(terminator);
+			//print(Hex.encodeHexString(terminator));
+			//df.seek(fptr);
 		
-		// print out field terminator
-		print("Field terminator");
-		byte [] terminator = new byte[1]; 
-		df.read(terminator);
-		print(Hex.encodeHexString(terminator));
+		// loop until you hit the 0Dh field terminator 
+		}
 		
-		
-		
+		for (FieldDescriptor tmp: this.FDArray) {
+			print(tmp);
+		}
 		
 		
 		
@@ -286,15 +289,6 @@ public class ShapeFile {
 		s.append("DbaseHeaderBytes: " + this.DbaseHeaderBytes +"\n");
 		s.append("DbaseRecordBytes: " + this.DbaseRecordBytes +"\n");
 		s.append("DbasePlusLanReserved: " + this.DbasePlusLanReserved +"\n");
-		s.append("FieldName : " + new String(this.FieldName) + "\n");
-		s.append("FieldType : " + String.valueOf((char)this.FieldType) + "\n");
-		s.append("FieldAddress : " + this.FieldAddress + "\n");		
-		s.append("FieldLength : " + this.FieldLength + "\n");
-		s.append("FieldDecimalCount: " + this.FieldDecimalCount + "\n");
-		s.append("DbasePlusLanReserved2: " + this.DbasePlusLanReserved2 + "\n");
-		s.append("WorkAreaID: " + this.WorkAreaID + "\n");
-		s.append("DbasePlusLanReserved3: " + this.DbasePlusLanReserved3 + "\n");
-		s.append("SetFields: " + this.SetFields + "\n");
 		
 		
 			
@@ -305,7 +299,7 @@ public class ShapeFile {
 	
 	
 	
-	 static void print(Object o){
+	  static void print(Object o){
 	    	System.out.println(o);
 	    }
 	
