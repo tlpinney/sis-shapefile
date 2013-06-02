@@ -22,6 +22,29 @@ public class App
     	ShapeFile shp;
     	int count;
     	
+    	
+    	
+    //	shp = new ShapeFile("data/SignedBikeRoute_4326.shp");
+    	
+	//	print(shp);
+		
+//		count = 0;
+//		for (Integer i: shp.FeatureMap.keySet()) {
+//			print(i);
+//			print(shp.FeatureMap.get(i));
+//			print("-----------------");
+//			count++;
+			//System.exit(0);
+//		}
+    	
+		
+//		print(count);
+//		print(shp.FeatureCount);
+//		print(shp.FeatureMap.get(1).geom.toString());
+		
+		
+ //   	System.exit(0);
+    	
     	shp = new ShapeFile("data/ANC90Ply_4326.shp");
 		print(shp);
 		
