@@ -27,29 +27,25 @@ public class App
     	
     	
     	
-    	shp = new ShapeFile("data/SignedBikeRoute_4326.shp");
-    	//Operator o = new Operator();
-    	//Operator.
+    	shp = new ShapeFile("data/SignedBikeRoute_4326_clipped.shp");
     	
 		print(shp);
 		
-	//	count = 0;
-	//	for (Integer i: shp.FeatureMap.keySet()) {
-	//		print(i);
-//			print(shp.FeatureMap.get(i));
-//			print("-----------------");
-//			count++;
+		count = 0;
+		for (Integer i: shp.FeatureMap.keySet()) {
+			print(i);
+			print(shp.FeatureMap.get(i));
+			print("-----------------");
+			count++;
 			//System.exit(0);
-//	}
+	}
     	
 		
-		//print(count);
+		print(count);
 		print(shp.FeatureCount);
 		Polyline poly = (Polyline) shp.FeatureMap.get(1).geom;
-		print(poly.getPointCount());
 		
 		
-    	System.exit(0);
     	
     	shp = new ShapeFile("data/ANC90Ply_4326.shp");
 		print(shp);
@@ -66,9 +62,8 @@ public class App
 		print(count);
 		print(shp.FeatureCount);
 		
-		System.exit(0);
 		
-		shp = new ShapeFile("data/ABRALicenseePt_4326.shp");
+		shp = new ShapeFile("data/ABRALicenseePt_4326_clipped.shp");
 		//print(shp);
 		
 		count = 0;
