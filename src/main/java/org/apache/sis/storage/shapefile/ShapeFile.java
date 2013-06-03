@@ -317,9 +317,6 @@ public class ShapeFile {
 				//print("PathCount: " + ply.getPathCount());
 				f.geom = ply;
 
-				//if (NumParts > 1) {
-				//	System.exit(0);
-				//}
 				
 				
 			} else {
@@ -340,6 +337,7 @@ public class ShapeFile {
 				String value = new String(data);
 				f.record.put(fd.getName(), value);				
 			}
+			
 			
 			this.FeatureMap.put(RecordNumber, f);
 					
