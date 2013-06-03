@@ -1,4 +1,4 @@
-package com.tlpinney.shapefile;
+package org.apache.sis.storage.shapefile;
 import java.util.HashMap;
 
 

@@ -1,4 +1,4 @@
-package com.tlpinney.shapefle.shapefile_api;
+package org.apache.sis.storage.shapefile.test;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
