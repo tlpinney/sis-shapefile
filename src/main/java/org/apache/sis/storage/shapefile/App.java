@@ -43,7 +43,7 @@ public class App
 		
 		print(count);
 		print(shp.FeatureCount);
-		Polyline poly = (Polyline) shp.FeatureMap.get(1).geom;
+		//Polyline poly = (Polyline) shp.FeatureMap.get(1).geom;
 		
 		
     	
