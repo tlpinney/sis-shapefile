@@ -163,7 +163,7 @@ public class ShapeFile {
 		}
 		
 		
-		print(df.readByte()); // should be 0d for field terminator 
+		df.readByte(); // should be 0d for field terminator 
 		
 			
 		
@@ -172,7 +172,7 @@ public class ShapeFile {
 		
 		
 		
-		print(this);
+		//print(this);
 		
 		
 		
@@ -274,14 +274,14 @@ public class ShapeFile {
 				rf.read(data);
 				int NumPoints = getLittleInt(data);
 				
-				print("NumParts: " + NumParts);
-				print("NumPoints: " + NumPoints);
+				//print("NumParts: " + NumParts);
+				//print("NumPoints: " + NumPoints);
 				int [] NumPartArr = new int[NumParts+1];
 				
 				for (int n=0; n < NumParts; n++) {
 					rf.read(data);
 					int idx = getLittleInt(data);
-					print("idx: " + idx);
+					//print("idx: " + idx);
 					NumPartArr[n] = idx;
 				}
 				NumPartArr[NumParts] = NumPoints;
@@ -294,7 +294,7 @@ public class ShapeFile {
 				
 			
 				for (int m=0; m < NumParts; m++) {
-					print("m: " + m);
+					//print("m: " + m);
 					
 					rf.read(data);
 					xpnt = getLittleDouble(data);
@@ -302,8 +302,9 @@ public class ShapeFile {
 					ypnt = getLittleDouble(data);
 					ply.startPath(xpnt, ypnt);
 					
-					for (int j=m; j < NumPartArr[m+1] - 1; j++) {
-						print("j: " + j);
+					for (int j=NumPartArr[m]; j < NumPartArr[m+1] - 1; j++) {
+						//print("j: " + j);
+						//print("NumPartArr[m+1]: " + NumPartArr[m+1]);
 						rf.read(data);
 						xpnt = getLittleDouble(data);
 						rf.read(data);
@@ -313,7 +314,7 @@ public class ShapeFile {
 				}
 				
 				
-				print("PathCount: " + ply.getPathCount());
+				//print("PathCount: " + ply.getPathCount());
 				f.geom = ply;
 
 				//if (NumParts > 1) {
