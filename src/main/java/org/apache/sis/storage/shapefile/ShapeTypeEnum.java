@@ -22,8 +22,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public enum ShapeTypeEnum  {
+/**
+ * Provides a ShapefileType Enumeration
+ *
+ * @see <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf">ESRI Shapefile Specification</a>
+ */
 
+public enum ShapeTypeEnum  {
+   
 	NullShape (0),
 	Point(1),
 	PolyLine(3),
@@ -39,6 +45,7 @@ public enum ShapeTypeEnum  {
 	MultiPointM(28),
 	MultiPatch(31);
 	
+	// used for initializing the enumeration 
 	private int value;
 	
 	private ShapeTypeEnum (int value ) {

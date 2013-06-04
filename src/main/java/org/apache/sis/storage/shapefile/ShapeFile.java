@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +30,12 @@ import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
 
-
+/**
+ * Provides a ShapeFile Reader
+ *
+ * @see <a href="http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf">ESRI Shapefile Specification</a>
+ * @see <a href="http://ulisse.elettra.trieste.it/services/doc/dbase/DBFstruct.htm">dBASE III File Structure</a>
+ */
 public class ShapeFile {
 
 	public int FileCode;   // big
@@ -92,8 +98,6 @@ public class ShapeFile {
 		String file_base = b.toString();
 		
 			
-		// http://ulisse.elettra.trieste.it/services/doc/dbase/DBFstruct.htm		
-		//RandomAccessFile df = new RandomAccessFile(file_base,"r");
 		FileInputStream fis2 = new FileInputStream(file_base);
 		FileChannel fc2 = fis2.getChannel();
 		int fsize2 = (int) fc2.size();
