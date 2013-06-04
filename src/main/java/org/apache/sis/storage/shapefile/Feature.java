@@ -36,8 +36,5 @@ public class Feature {
 		return sb.toString();
 	}
 	
-	static void print(Object o){
-    	System.out.println(o);
-    }
 
 }

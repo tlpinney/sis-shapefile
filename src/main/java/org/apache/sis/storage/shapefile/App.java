@@ -32,9 +32,10 @@ import com.esri.core.geometry.Operator;
 
 
 /**
- * Hello world!
+ * Command Line Shapefile Utilties
  *
  */
+
 public class App 
 {
     public static void main( String[] args ) throws IOException

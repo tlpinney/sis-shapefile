@@ -143,14 +143,11 @@ public class ShapeFile {
 			int RecordNumber = rf.getInt();
 			int ContentLength = rf.getInt();
 			
-			//print("RecordNumber: " + RecordNumber);
-			
 			data = new byte[4];	
 			rf.order(ByteOrder.LITTLE_ENDIAN);
 			int ShapeType = rf.getInt();
 			Feature f = new Feature();
 			f.record = new HashMap<String, String>();
-			//print(ShapeType);
 			
 			if (ShapeType == ShapeTypeEnum.Point.getValue()) {
 				double x = rf.getDouble();
@@ -168,20 +165,13 @@ public class ShapeFile {
 				
 				if (NumParts > 1) {
 					// not implemented yet
-					print("Not implemented yet.");
+					// TODO: throw an exception
+					System.out.println("Not implemented yet.");
 					System.exit(-1);
 				}
 				
-				// Depending on num parts and num points 
-				
-				//print("NumParts: " + NumParts);
-				//print("NumPoints: " + NumPoints);
-				
 				// read the one part 
 				int Part = rf.getInt();
-				//print(Part);
-				
-				
 				Polygon poly = new Polygon();
 				
 				// create a line from the points
@@ -233,22 +223,20 @@ public class ShapeFile {
 				}
 								
 				f.geom = ply;
-
-				
 				
 			} else {
-				print("Unsupported shapefile type");
-				print(this.ShapeType);
+				// TODO: throw an exception
+				System.out.println("Unsupported shapefile type");
+				System.out.println(this.ShapeType);
 				System.exit(-1);
 			}
 			
 			rf.order(ByteOrder.BIG_ENDIAN);
-						
 			// read in each Record and Populate the Feature
 		
 			df.get(); // denotes whether deleted or current
-			
 			// read first part of record 	
+
 			for (FieldDescriptor fd: this.FDArray) {
 				data = new byte[fd.getLength()];
 				df.get(data);
@@ -258,7 +246,6 @@ public class ShapeFile {
 			
 			
 			this.FeatureMap.put(RecordNumber, f);
-					
 			
 		}
 	
@@ -298,8 +285,5 @@ public class ShapeFile {
 	
 	
 	
-	  static void print(Object o){
-	    	System.out.println(o);
-	    }
 	
 }
