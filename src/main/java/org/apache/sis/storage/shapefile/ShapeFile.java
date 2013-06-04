@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.channels.Channel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.io.FileInputStream;
@@ -101,46 +102,25 @@ public class ShapeFile {
 		
 		byte [] data = new byte[4];
 		
-		rf.get(data);
-		this.Version = getLittleInt(data);
-		
-		rf.get(data);
-		this.ShapeType = ShapeTypeEnum.get(getLittleInt(data));
-		
-		data = new byte[8];
-		
-		rf.get(data);
-		this.xmin = getLittleDouble(data);
-		
-		rf.get(data);
-		this.ymin = getLittleDouble(data);
-		
-		rf.get(data);
-		this.xmax = getLittleDouble(data);
-
-		rf.get(data);
-		this.ymax = getLittleDouble(data);
-		
-		rf.get(data);
-		this.zmin = getLittleDouble(data);
-	
-
-		rf.get(data);
-		this.zmax = getLittleDouble(data);
-		
-		rf.get(data);
-		this.mmin = getLittleDouble(data);
-
-		rf.get(data);
-		this.mmax = getLittleDouble(data);
+		rf.order(ByteOrder.LITTLE_ENDIAN);
+		this.Version = rf.getInt();
+		this.ShapeType = ShapeTypeEnum.get(rf.getInt());
+		this.xmin = rf.getDouble();
+		this.ymin = rf.getDouble();
+		this.xmax = rf.getDouble();
+		this.ymax = rf.getDouble();
+		this.zmin = rf.getDouble();
+		this.zmax = rf.getDouble();
+		this.mmin = rf.getDouble();
+		this.mmax = rf.getDouble();
+		rf.order(ByteOrder.BIG_ENDIAN);
 		
 		StringBuilder b = new StringBuilder(shpfile);
 		b.replace(shpfile.length() - 3, shpfile.length() , "dbf");
 		String file_base = b.toString();
 		
 			
-		// http://ulisse.elettra.trieste.it/services/doc/dbase/DBFstruct.htm
-			
+		// http://ulisse.elettra.trieste.it/services/doc/dbase/DBFstruct.htm		
 		//RandomAccessFile df = new RandomAccessFile(file_base,"r");
 		FileInputStream fis2 = new FileInputStream(file_base);
 		FileChannel fc2 = fis2.getChannel();
@@ -151,25 +131,20 @@ public class ShapeFile {
 		
 		this.DbaseVersion = df.get();
 		df.get(this.DbaseLastUpdate);
-		data = new byte[4];
-		df.get(data);
-		this.FeatureCount = getLittleInt(data);
-		data = new byte[2];
-		df.get(data);
-		this.DbaseHeaderBytes = getLittleShort(data);
-		df.get(data);
-		this.DbaseRecordBytes = getLittleShort(data);
+		
+		df.order(ByteOrder.LITTLE_ENDIAN);
+		this.FeatureCount = df.getInt();
+		this.DbaseHeaderBytes = df.getShort();
+		this.DbaseRecordBytes = df.getShort();
+		df.order(ByteOrder.BIG_ENDIAN);		
 		df.getShort(); // reserved 
 		df.get(); // reserved
 		df.get(DbasePlusLanReserved);
 		df.getInt();
-		
-		
-		
+			
 		while(df.position() <  this.DbaseHeaderBytes - 1) {
 			FieldDescriptor fd = new FieldDescriptor();
 			df.get(fd.FieldName);
-			//print("FieldName: " + new String(fd.FieldName));
 			fd.FieldType = df.get();	
 			df.get(fd.FieldAddress);
 			fd.FieldLength = df.get();
@@ -189,16 +164,7 @@ public class ShapeFile {
 		
 		df.get(); // should be 0d for field terminator 
 		
-			
-		
-		// read in the record header
-		
-		
-		
-		
-		//print(this);
-		
-		
+					
 		
 		for (Integer i = 0; i < this.FeatureCount; i++) {
 			// insert points into some type of list
@@ -208,41 +174,25 @@ public class ShapeFile {
 			//print("RecordNumber: " + RecordNumber);
 			
 			data = new byte[4];	
-			rf.get(data);
-			int ShapeType = getLittleInt(data);
+			rf.order(ByteOrder.LITTLE_ENDIAN);
+			int ShapeType = rf.getInt();
 			Feature f = new Feature();
 			f.record = new HashMap<String, String>();
 			//print(ShapeType);
 			
 			if (ShapeType == ShapeTypeEnum.Point.getValue()) {
-				data = new byte[8];
-			
-				rf.get(data);
-				double x = getLittleDouble(data);
-			
-				rf.get(data);
-				double y = getLittleDouble(data);
-						
+				double x = rf.getDouble();
+				double y = rf.getDouble();
 				Point pnt = new Point(x,y);
 				f.geom = pnt;
-				
-			
+							
 			} else if (ShapeType == ShapeTypeEnum.Polygon.getValue()) {
-				data = new byte[8];
-				rf.get(data);
-				double xmin = getLittleDouble(data);
-				rf.get(data);
-				double ymin = getLittleDouble(data);
-				rf.get(data);
-				double xmax = getLittleDouble(data);
-				rf.get(data);
-				double ymax = getLittleDouble(data);
-				
-				data = new byte[4];
-				rf.get(data);
-				int NumParts = getLittleInt(data);
-				rf.get(data);
-				int NumPoints = getLittleInt(data);
+				double xmin = rf.getDouble();
+				double ymin = rf.getDouble();
+				double xmax = rf.getDouble();
+				double ymax = rf.getDouble();
+				int NumParts = rf.getInt();
+				int NumPoints = rf.getInt();
 				
 				if (NumParts > 1) {
 					// not implemented yet
@@ -256,56 +206,38 @@ public class ShapeFile {
 				//print("NumPoints: " + NumPoints);
 				
 				// read the one part 
-				rf.get(data);
-				int Part = getLittleInt(data);
+				int Part = rf.getInt();
 				//print(Part);
 				
 				
 				Polygon poly = new Polygon();
 				
 				// create a line from the points
-				data = new byte[8];
-				rf.get(data);
-				double xpnt = getLittleDouble(data);
-				rf.get(data);
-				double ypnt = getLittleDouble(data);
+				double xpnt = rf.getDouble();
+				double ypnt = rf.getDouble();
 				//Point oldpnt = new Point(xpnt, ypnt);
 				poly.startPath(xpnt, ypnt);
 				for (int j=0; j < NumPoints-1; j++) {
-					rf.get(data);
-					xpnt = getLittleDouble(data);
-					rf.get(data);
-					ypnt = getLittleDouble(data);
+					xpnt = rf.getDouble();
+					ypnt = rf.getDouble();
 					poly.lineTo(xpnt, ypnt);	
-					//print(xpnt + " " + ypnt);
 				}
 				f.geom = poly;
 				
 			} else if (ShapeType == ShapeTypeEnum.PolyLine.getValue()) {
-				data = new byte[8];
-				rf.get(data);
-				double xmin = getLittleDouble(data);
-				rf.get(data);
-				double ymin = getLittleDouble(data);
-				rf.get(data);
-				double xmax = getLittleDouble(data);
-				rf.get(data);
-				double ymax = getLittleDouble(data);
+				double xmin = rf.getDouble();
+				double ymin = rf.getDouble();
+				double xmax = rf.getDouble();
+				double ymax = rf.getDouble();
 				
-				data = new byte[4];
-				rf.get(data);
-				int NumParts = getLittleInt(data);
-				rf.get(data);
-				int NumPoints = getLittleInt(data);
+				int NumParts = rf.getInt();
+				int NumPoints = rf.getInt();
 				
-				//print("NumParts: " + NumParts);
-				//print("NumPoints: " + NumPoints);
 				int [] NumPartArr = new int[NumParts+1];
 				
 				for (int n=0; n < NumParts; n++) {
 					rf.get(data);
 					int idx = getLittleInt(data);
-					//print("idx: " + idx);
 					NumPartArr[n] = idx;
 				}
 				NumPartArr[NumParts] = NumPoints;
@@ -318,27 +250,17 @@ public class ShapeFile {
 				
 			
 				for (int m=0; m < NumParts; m++) {
-					//print("m: " + m);
-					
-					rf.get(data);
-					xpnt = getLittleDouble(data);
-					rf.get(data);
-					ypnt = getLittleDouble(data);
+					xpnt = rf.getDouble();
+					ypnt = rf.getDouble();
 					ply.startPath(xpnt, ypnt);
 					
 					for (int j=NumPartArr[m]; j < NumPartArr[m+1] - 1; j++) {
-						//print("j: " + j);
-						//print("NumPartArr[m+1]: " + NumPartArr[m+1]);
-						rf.get(data);
-						xpnt = getLittleDouble(data);
-						rf.get(data);
-						ypnt = getLittleDouble(data);
+						xpnt = rf.getDouble();
+						ypnt = rf.getDouble();
 						ply.lineTo(xpnt, ypnt);
 					}
 				}
-				
-				
-				//print("PathCount: " + ply.getPathCount());
+								
 				f.geom = ply;
 
 				
@@ -349,6 +271,7 @@ public class ShapeFile {
 				System.exit(-1);
 			}
 			
+			rf.order(ByteOrder.BIG_ENDIAN);
 						
 			// read in each Record and Populate the Feature
 		
@@ -368,8 +291,6 @@ public class ShapeFile {
 			
 		}
 	
-		//df.close();
-		//rf.close();	
 		fc.close();
 		fc2.close();
 		
@@ -398,10 +319,6 @@ public class ShapeFile {
 		s.append("DbaseHeaderBytes: " + this.DbaseHeaderBytes +"\n");
 		s.append("DbaseRecordBytes: " + this.DbaseRecordBytes +"\n");
 		s.append("DbasePlusLanReserved: " + this.DbasePlusLanReserved +"\n");
-		
-		
-			
-		
 		
 		return s.toString();
 	}

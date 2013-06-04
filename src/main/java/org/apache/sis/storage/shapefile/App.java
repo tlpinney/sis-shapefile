@@ -29,13 +29,13 @@ public class App
     	
     	shp = new ShapeFile("data/SignedBikeRoute_4326_clipped.shp");
     	
-		print(shp);
+		//print(shp);
 		
 		count = 0;
 		for (Integer i: shp.FeatureMap.keySet()) {
-			print(i);
-			print(shp.FeatureMap.get(i));
-			print("-----------------");
+			//print(i);
+			//print(shp.FeatureMap.get(i));
+			//print("-----------------");
 			count++;
 			//System.exit(0);
 	}
@@ -48,13 +48,13 @@ public class App
 		
     	
     	shp = new ShapeFile("data/ANC90Ply_4326.shp");
-		print(shp);
+		//print(shp);
 		
 		count = 0;
 		for (Integer i: shp.FeatureMap.keySet()) {
-			print(i);
-			print(shp.FeatureMap.get(i));
-			print("-----------------");
+			//print(i);
+			//print(shp.FeatureMap.get(i));
+			//print("-----------------");
 			count++;
 			//System.exit(0);
 		}
@@ -68,9 +68,9 @@ public class App
 		
 		count = 0;
 		for (Integer i: shp.FeatureMap.keySet()) {
-			print(i);
-			print(shp.FeatureMap.get(i));
-			print("-----------------");
+			//print(i);
+			//print(shp.FeatureMap.get(i));
+			//print("-----------------");
 			count++;
 			//System.exit(0);
 		}
