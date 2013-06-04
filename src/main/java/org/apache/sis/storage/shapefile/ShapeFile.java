@@ -17,34 +17,17 @@
 
 package org.apache.sis.storage.shapefile;
 
-import java.io.File;
 import java.io.IOException;
-//import java.io.RandomAccessFile;
-
-import java.nio.channels.Channel;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.io.FileInputStream;
-
-
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.io.EndianUtils;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
-
-
-
-import org.apache.commons.codec.binary.Hex;
-
-
 
 
 public class ShapeFile {
@@ -61,8 +44,6 @@ public class ShapeFile {
 	public double zmax; // little 
 	public double mmin; // little
 	public double mmax; // little 
-	//public int RecordNumber; // big 
-	//public int ContentLength; // big
 	
 	
 	// http://ulisse.elettra.trieste.it/services/doc/dbase/DBFstruct.htm
@@ -75,22 +56,12 @@ public class ShapeFile {
 	public byte[] DbasePlusLanReserved = new byte[13];
 	// reserve 4 bytes
 	
-	
-	
-	
-	
 	public ArrayList<FieldDescriptor> FDArray = new ArrayList<FieldDescriptor>();
 	public Map<Integer, Feature> FeatureMap = new HashMap<Integer, Feature>();
 	
 	
 	
 	public ShapeFile(String shpfile) throws IOException {
-		// load the shapefile in fill in corresponding metadata 
-		// RandomAccessFile rf = new RandomAccessFile(shpfile,"r");
-		
-		// should extend RandomAccessFile (or other Class)
-		// and have function and have it to deal with different 
-		// endian data
 			
 		FileInputStream fis = new FileInputStream(shpfile);
 		FileChannel fc = fis.getChannel();
@@ -293,6 +264,8 @@ public class ShapeFile {
 	
 		fc.close();
 		fc2.close();
+		fis.close();
+		fis2.close();
 		
 	}
 	
