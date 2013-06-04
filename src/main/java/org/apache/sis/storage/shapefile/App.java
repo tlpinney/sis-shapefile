@@ -31,10 +31,6 @@ import com.esri.core.geometry.Operator;
 
 
 
-/**
- * Command Line Shapefile Utilties
- *
- */
 
 public class App 
 {

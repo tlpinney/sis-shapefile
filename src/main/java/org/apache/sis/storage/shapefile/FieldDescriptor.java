@@ -38,21 +38,23 @@ public class FieldDescriptor {
 	public int getLength() {
 		return this.FieldLength & 0xFF;
 	}
+	
 	public String toString() { 
 		
-	StringBuilder s = new StringBuilder();
-		
-	s.append("FieldName : " + new String(this.FieldName) + "\n");
-	s.append("FieldType : " + String.valueOf((char)this.FieldType) + "\n");
-	s.append("FieldAddress : " + this.FieldAddress + "\n");		
-	s.append("FieldLength : " + this.FieldLength + "\n");
-	s.append("FieldDecimalCount: " + this.FieldDecimalCount + "\n");
-	s.append("DbasePlusLanReserved2: " + this.DbasePlusLanReserved2 + "\n");
-	s.append("WorkAreaID: " + this.WorkAreaID + "\n");
-	s.append("DbasePlusLanReserved3: " + this.DbasePlusLanReserved3 + "\n");
-	s.append("SetFields: " + this.SetFields + "\n");
+		StringBuilder s = new StringBuilder();
+		String lineSeparator = System.getProperty("line.separator", "\n");
 	
-	return s.toString();
+		s.append("FieldName : ").append(new String(FieldName)).append(lineSeparator);
+		s.append("FieldType : ").append(String.valueOf((char)FieldType) + "\n");
+		s.append("FieldAddress :").append(FieldAddress).append(lineSeparator);		
+		s.append("FieldLength : ").append(FieldLength).append(lineSeparator);
+		s.append("FieldDecimalCount: ").append(FieldDecimalCount).append(lineSeparator);
+		s.append("DbasePlusLanReserved2: ").append(DbasePlusLanReserved2 + "\n");
+		s.append("WorkAreaID: ").append(WorkAreaID).append(lineSeparator);
+		s.append("DbasePlusLanReserved3: ").append(DbasePlusLanReserved3).append(lineSeparator);
+		s.append("SetFields: ").append(SetFields).append(lineSeparator);
+		
+		return s.toString();
 	
 	}
 	

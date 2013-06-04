@@ -259,26 +259,27 @@ public class ShapeFile {
 	public String toString() { 
 		
 		StringBuilder s = new StringBuilder();
+		String lineSeparator = System.getProperty("line.separator", "\n");
 		
-		s.append("FileCode: " + this.FileCode + "\n");
-		s.append("FileLength: " + this.FileLength + "\n");
-		s.append("Version: " + this.Version + "\n");
-		s.append("ShapeType: " + this.ShapeType+ "\n");
-		s.append("xmin: " + this.xmin+ "\n");
-		s.append("ymin: "+ this.ymin+ "\n");
-		s.append("xmax: " + this.xmax+ "\n");
-		s.append("ymax: " + this.ymax+ "\n");
-		s.append("zmin: " + this.zmin+ "\n");
-		s.append("zmax: " + this.zmax+ "\n");
-		s.append("mmin: " + this.mmin+ "\n");
-		s.append("mmax: " + this.mmax+ "\n");	
-		s.append("------------------------\n");
-		s.append("DbaseVersion: " + this.DbaseVersion+ "\n");
-		s.append("DbaseLastUpdate: " + new String(this.DbaseLastUpdate) +"\n");
-		s.append("FeatureCount: " + this.FeatureCount +"\n");
-		s.append("DbaseHeaderBytes: " + this.DbaseHeaderBytes +"\n");
-		s.append("DbaseRecordBytes: " + this.DbaseRecordBytes +"\n");
-		s.append("DbasePlusLanReserved: " + this.DbasePlusLanReserved +"\n");
+		s.append("FileCode: ").append(FileCode).append(lineSeparator);
+		s.append("FileLength: ").append(FileLength).append(lineSeparator);
+		s.append("Version: ").append(Version).append(lineSeparator);
+		s.append("ShapeType: ").append(ShapeType).append(lineSeparator);
+		s.append("xmin: ").append(xmin).append(lineSeparator);
+		s.append("ymin: ").append(ymin).append(lineSeparator);
+		s.append("xmax: ").append(xmax).append(lineSeparator);
+		s.append("ymax: ").append(ymax).append(lineSeparator);
+		s.append("zmin: ").append(zmin).append(lineSeparator);
+		s.append("zmax: ").append(zmax).append(lineSeparator);
+		s.append("mmin: ").append(mmin).append(lineSeparator);
+		s.append("mmax: ").append(mmax).append(lineSeparator);	
+		s.append("------------------------").append(lineSeparator);
+		s.append("DbaseVersion: ").append(DbaseVersion).append(lineSeparator);
+		s.append("DbaseLastUpdate: ").append(new String(DbaseLastUpdate)).append(lineSeparator);
+		s.append("FeatureCount: ").append(FeatureCount).append(lineSeparator);
+		s.append("DbaseHeaderBytes: ").append(DbaseHeaderBytes).append(lineSeparator);
+		s.append("DbaseRecordBytes: ").append(DbaseRecordBytes).append(lineSeparator);
+		s.append("DbasePlusLanReserved: ").append(DbasePlusLanReserved).append(lineSeparator);
 		
 		return s.toString();
 	}

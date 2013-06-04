@@ -29,8 +29,10 @@ public class Feature {
 	
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		String lineSeparator = System.getProperty("line.separator", "\n");
+		
 		for (String s : this.record.keySet()) {
-			sb.append(s + ": " + this.record.get(s) + "\n");
+			sb.append(s).append(": ").append(record.get(s)).append(lineSeparator);
 		}
 
 		return sb.toString();
