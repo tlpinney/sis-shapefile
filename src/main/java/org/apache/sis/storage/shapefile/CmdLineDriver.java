@@ -32,73 +32,15 @@ import com.esri.core.geometry.Operator;
 
 
 
-public class App 
+public class CmdLineDriver 
 {
     public static void main( String[] args ) throws IOException
     {
     	
-    	ShapeFile shp;
-    	int count;
-    	
-    	
-    	
-    	shp = new ShapeFile("data/SignedBikeRoute_4326_clipped.shp");
-    	
-		//print(shp);
-		
-		count = 0;
-		for (Integer i: shp.FeatureMap.keySet()) {
-			//print(i);
-			//print(shp.FeatureMap.get(i));
-			//print("-----------------");
-			count++;
-			//System.exit(0);
-	}
-    	
-		
-		print(count);
-		print(shp.FeatureCount);
-		//Polyline poly = (Polyline) shp.FeatureMap.get(1).geom;
-		
-		
-    	
-    	shp = new ShapeFile("data/ANC90Ply_4326.shp");
-		//print(shp);
-		
-		count = 0;
-		for (Integer i: shp.FeatureMap.keySet()) {
-			//print(i);
-			//print(shp.FeatureMap.get(i));
-			//print("-----------------");
-			count++;
-			//System.exit(0);
-		}
-		
-		print(count);
-		print(shp.FeatureCount);
-		
-		
-		shp = new ShapeFile("data/ABRALicenseePt_4326_clipped.shp");
-		//print(shp);
-		
-		count = 0;
-		for (Integer i: shp.FeatureMap.keySet()) {
-			//print(i);
-			//print(shp.FeatureMap.get(i));
-			//print("-----------------");
-			count++;
-			//System.exit(0);
-		}
-		
-		print(count);
-		print(shp.FeatureCount);
-		
+    	// code will eventually added here to deal with the command line...
 		
                
             
     }
     
-    static void print(Object o){
-    	System.out.println(o);
-    }
 }
