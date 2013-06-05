@@ -32,8 +32,8 @@ import com.esri.core.geometry.Geometry;
 
 public class Feature {
 	
-	HashMap<String, String> record;  
-	Geometry geom;
+	private HashMap<String, String> record;  
+	private	Geometry geom;
 	
 	
 	public String toString() {
@@ -48,6 +48,25 @@ public class Feature {
 	}
 	
 	
+	// getters and setters
 	
+	public HashMap<String, String> getRecord() {
+		return record;
+	}
+
+
+	public void setRecord(HashMap<String, String> record) {
+		this.record = record;
+	}
+
+
+	public Geometry getGeom() {
+		return geom;
+	}
+
+
+	public void setGeom(Geometry geom) {
+		this.geom = geom;
+	}
 
 }

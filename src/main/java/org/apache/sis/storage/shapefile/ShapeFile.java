@@ -153,13 +153,13 @@ public class ShapeFile {
 			rf.order(ByteOrder.LITTLE_ENDIAN);
 			int ShapeType = rf.getInt();
 			Feature f = new Feature();
-			f.record = new HashMap<String, String>();
+			f.setRecord(new HashMap<String, String>());
 			
 			if (ShapeType == ShapeTypeEnum.Point.getValue()) {
 				double x = rf.getDouble();
 				double y = rf.getDouble();
 				Point pnt = new Point(x,y);
-				f.geom = pnt;
+				f.setGeom(pnt);
 							
 			} else if (ShapeType == ShapeTypeEnum.Polygon.getValue()) {
 				double xmin = rf.getDouble();
@@ -190,7 +190,7 @@ public class ShapeFile {
 					ypnt = rf.getDouble();
 					poly.lineTo(xpnt, ypnt);	
 				}
-				f.geom = poly;
+				f.setGeom(poly);
 				
 			} else if (ShapeType == ShapeTypeEnum.PolyLine.getValue()) {
 				double xmin = rf.getDouble();
@@ -228,7 +228,7 @@ public class ShapeFile {
 					}
 				}
 								
-				f.geom = ply;
+				f.setGeom(ply);
 				
 			} else {
 				// TODO: throw an exception
@@ -247,7 +247,7 @@ public class ShapeFile {
 				data = new byte[fd.getLength()];
 				df.get(data);
 				String value = new String(data);
-				f.record.put(fd.getName(), value);				
+				f.getRecord().put(fd.getName(), value);				
 			}
 			
 			
