@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
+//import java.nio.channels.ReadableByteChannel;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +29,8 @@ import java.util.Map;
 import com.esri.core.geometry.Point;
 import com.esri.core.geometry.Polygon;
 import com.esri.core.geometry.Polyline;
+//import org.apache.sis.internal.storage.ChannelImageInputStream;
+
 
 /**
  * Provides a ShapeFile Reader
