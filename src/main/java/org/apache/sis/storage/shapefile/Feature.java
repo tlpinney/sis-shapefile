@@ -20,6 +20,15 @@ package org.apache.sis.storage.shapefile;
 import java.util.HashMap;
 import com.esri.core.geometry.Geometry;
 
+// 
+
+/**
+ * Provides a simple Feature class
+ *
+ * when dealing with codepages, should first check if there is a .cpg file 
+ * 
+ * @see <a href="http://www.clicketyclick.dk/databases/xbase/format/dbf.html#DBF_STRUCT">Xbase Data file</a>
+ */
 
 public class Feature {
 	
@@ -37,6 +46,8 @@ public class Feature {
 
 		return sb.toString();
 	}
+	
+	
 	
 
 }
