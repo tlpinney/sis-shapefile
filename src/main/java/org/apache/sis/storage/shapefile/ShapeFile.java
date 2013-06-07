@@ -123,7 +123,8 @@ public class ShapeFile {
 		while(df.position() <  this.DbaseHeaderBytes - 1) {
 			FieldDescriptor fd = new FieldDescriptor();
 			df.get(fd.FieldName);
-			fd.FieldType = df.get();	
+			char dt = (char) df.get();
+			fd.FieldType = DataType.valueOfDataType(dt);	
 			df.get(fd.FieldAddress);
 			fd.FieldLength = df.get();
 			fd.FieldDecimalCount = df.get();
@@ -240,6 +241,7 @@ public class ShapeFile {
 			rf.order(ByteOrder.BIG_ENDIAN);
 			// read in each Record and Populate the Feature
 		
+			// TODO: ignore deleted records
 			df.get(); // denotes whether deleted or current
 			// read first part of record 	
 
@@ -262,6 +264,7 @@ public class ShapeFile {
 		
 	}
 	
+
 	public String toString() { 
 		
 		StringBuilder s = new StringBuilder();

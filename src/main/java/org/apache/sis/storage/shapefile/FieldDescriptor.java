@@ -20,7 +20,7 @@ package org.apache.sis.storage.shapefile;
 public class FieldDescriptor {
 	
 	public byte[] FieldName = new byte[11];
-	public byte FieldType;
+	public DataType FieldType;
 	public byte[] FieldAddress = new byte[4];
 	public byte FieldLength;
 	public byte FieldDecimalCount;
@@ -45,7 +45,7 @@ public class FieldDescriptor {
 		String lineSeparator = System.getProperty("line.separator", "\n");
 	
 		s.append("FieldName : ").append(new String(FieldName)).append(lineSeparator);
-		s.append("FieldType : ").append(String.valueOf((char)FieldType) + "\n");
+		s.append("FieldType : ").append(FieldType).append(lineSeparator);
 		s.append("FieldAddress :").append(FieldAddress).append(lineSeparator);		
 		s.append("FieldLength : ").append(FieldLength).append(lineSeparator);
 		s.append("FieldDecimalCount: ").append(FieldDecimalCount).append(lineSeparator);
